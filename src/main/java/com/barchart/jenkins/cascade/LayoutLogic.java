@@ -474,8 +474,12 @@ public class LayoutLogic implements PluginConstants {
 				final GitSCM gitScm = (GitSCM) scm;
 
 				final String includedRegions = "disabled-by" + "_" + PLUGIN_ID;
-
-				changeField(gitScm, "includedRegions", includedRegions);
+				try {
+					changeField(gitScm, "includedRegions", includedRegions);
+				} catch (IOException e) {
+					// TODO: I'm not sure what we want to do with this field.
+					context.logTab("Assuming repository pooling trigger is disabled.");
+				}
 
 				break SCM;
 
@@ -716,7 +720,13 @@ public class LayoutLogic implements PluginConstants {
 				final String includedRegions = memberModule.getRelativePath()
 						+ "/.*";
 
-				changeField(gitScm, "includedRegions", includedRegions);
+				try {
+					changeField(gitScm, "includedRegions", includedRegions);
+
+				} catch (IOException e) {
+					// TODO: I don't know how to do it.
+					context.logErr("You need to configure includedRegions/repository pooling manually.");
+				}
 
 				break SCM;
 
